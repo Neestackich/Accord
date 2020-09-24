@@ -5,4 +5,8 @@
 //  Created by Neestackich on 24.09.2020.
 //
 
-import Foundation
+import UIKit
+
+class DatabaseManager {
+    static let shared = DatabaseManager()
+}
