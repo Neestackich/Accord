@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>373397081165-12mpbo10a6b69ofr9un3c7r3f2789coq.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.373397081165-12mpbo10a6b69ofr9un3c7r3f2789coq</string>
+	<key>API_KEY</key>
+	<string>AIzaSyBi7D7sk-j-uhWdcTxupN-D9Rd66Cxv2iY</string>
+	<key>GCM_SENDER_ID</key>
+	<string>373397081165</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>Vittcal.Accord</string>
+	<key>PROJECT_ID</key>
+	<string>travelapp-54f63</string>
+	<key>STORAGE_BUCKET</key>
+	<string>travelapp-54f63.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:373397081165:ios:e4fb547243931e477ea004</string>
+	<key>DATABASE_URL</key>
+	<string>https://travelapp-54f63.firebaseio.com</string>
+</dict>
+</plist>
