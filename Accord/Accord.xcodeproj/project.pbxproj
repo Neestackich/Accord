@@ -3,13 +3,19 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
+		12215BCF49EF80675CC822D3 /* Pods_Accord.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0FE0E38006D3FEEEF3F7C49D /* Pods_Accord.framework */; };
+		CE2B6CF0251CB49500F3432F /* MusicListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE2B6CEF251CB49500F3432F /* MusicListViewController.swift */; };
+		CE2B6CF3251CB4C300F3432F /* PlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE2B6CF2251CB4C300F3432F /* PlayerViewController.swift */; };
+		CE2B6CF8251D02C300F3432F /* MusicTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE2B6CF7251D02C300F3432F /* MusicTableViewCell.swift */; };
+		CE2B6CFB251D39C000F3432F /* DatabaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE2B6CFA251D39C000F3432F /* DatabaseManager.swift */; };
+		CE2BB91F251FAA33001420DF /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = CE2BB91E251FAA33001420DF /* GoogleService-Info.plist */; };
+		CE4D90142520C2D50020FF3D /* URLSessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE4D90132520C2D50020FF3D /* URLSessionManager.swift */; };
 		CE9E31F6251BDB4600D23A9D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE9E31F5251BDB4600D23A9D /* AppDelegate.swift */; };
 		CE9E31F8251BDB4600D23A9D /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE9E31F7251BDB4600D23A9D /* SceneDelegate.swift */; };
-		CE9E31FA251BDB4600D23A9D /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE9E31F9251BDB4600D23A9D /* ViewController.swift */; };
 		CE9E31FD251BDB4600D23A9D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CE9E31FB251BDB4600D23A9D /* Main.storyboard */; };
 		CE9E3200251BDB4600D23A9D /* Accord.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = CE9E31FE251BDB4600D23A9D /* Accord.xcdatamodeld */; };
 		CE9E3202251BDB4700D23A9D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CE9E3201251BDB4700D23A9D /* Assets.xcassets */; };
@@ -17,10 +23,18 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0FE0E38006D3FEEEF3F7C49D /* Pods_Accord.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Accord.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		2C4DFAB6F1D46AA724A17E64 /* Pods-Accord.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Accord.debug.xcconfig"; path = "Target Support Files/Pods-Accord/Pods-Accord.debug.xcconfig"; sourceTree = "<group>"; };
+		32CDC082F315D75FDE575134 /* Pods-Accord.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Accord.release.xcconfig"; path = "Target Support Files/Pods-Accord/Pods-Accord.release.xcconfig"; sourceTree = "<group>"; };
+		CE2B6CEF251CB49500F3432F /* MusicListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicListViewController.swift; sourceTree = "<group>"; };
+		CE2B6CF2251CB4C300F3432F /* PlayerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerViewController.swift; sourceTree = "<group>"; };
+		CE2B6CF7251D02C300F3432F /* MusicTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicTableViewCell.swift; sourceTree = "<group>"; };
+		CE2B6CFA251D39C000F3432F /* DatabaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseManager.swift; sourceTree = "<group>"; };
+		CE2BB91E251FAA33001420DF /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
+		CE4D90132520C2D50020FF3D /* URLSessionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLSessionManager.swift; sourceTree = "<group>"; };
 		CE9E31F2251BDB4600D23A9D /* Accord.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Accord.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CE9E31F5251BDB4600D23A9D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		CE9E31F7251BDB4600D23A9D /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		CE9E31F9251BDB4600D23A9D /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		CE9E31FC251BDB4600D23A9D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		CE9E31FF251BDB4600D23A9D /* Accord.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Accord.xcdatamodel; sourceTree = "<group>"; };
 		CE9E3201251BDB4700D23A9D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -33,17 +47,77 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				12215BCF49EF80675CC822D3 /* Pods_Accord.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		24B58A1075B3F11F63426DE3 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				2C4DFAB6F1D46AA724A17E64 /* Pods-Accord.debug.xcconfig */,
+				32CDC082F315D75FDE575134 /* Pods-Accord.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
+		CE2B6CF5251CB4EB00F3432F /* Exceptions */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Exceptions;
+			sourceTree = "<group>";
+		};
+		CE2BB921251FB599001420DF /* Managers */ = {
+			isa = PBXGroup;
+			children = (
+				CE2B6CFA251D39C000F3432F /* DatabaseManager.swift */,
+				CE4D90132520C2D50020FF3D /* URLSessionManager.swift */,
+			);
+			path = Managers;
+			sourceTree = "<group>";
+		};
+		CE2BB922251FB5AC001420DF /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				CE2BB923251FB5BC001420DF /* Entities */,
+				CE2BB921251FB599001420DF /* Managers */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		CE2BB923251FB5BC001420DF /* Entities */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Entities;
+			sourceTree = "<group>";
+		};
+		CE2BB924251FB607001420DF /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				CE2B6CF7251D02C300F3432F /* MusicTableViewCell.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		CE2BB925251FB65E001420DF /* Assets */ = {
+			isa = PBXGroup;
+			children = (
+				CE9E3201251BDB4700D23A9D /* Assets.xcassets */,
+			);
+			path = Assets;
+			sourceTree = "<group>";
+		};
 		CE9E31E9251BDB4600D23A9D = {
 			isa = PBXGroup;
 			children = (
 				CE9E31F4251BDB4600D23A9D /* Accord */,
 				CE9E31F3251BDB4600D23A9D /* Products */,
+				24B58A1075B3F11F63426DE3 /* Pods */,
+				CFB14AFD2192E03503215368 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -58,14 +132,16 @@
 		CE9E31F4251BDB4600D23A9D /* Accord */ = {
 			isa = PBXGroup;
 			children = (
-				CE9E31F5251BDB4600D23A9D /* AppDelegate.swift */,
 				CE9E31F7251BDB4600D23A9D /* SceneDelegate.swift */,
-				CE9E3214251BDF7B00D23A9D /* DataModels */,
-				CE9E3213251BDF0400D23A9D /* MainActivity */,
+				CE9E31F5251BDB4600D23A9D /* AppDelegate.swift */,
 				CE9E3210251BDC1600D23A9D /* Storyboards */,
+				CE2BB922251FB5AC001420DF /* Models */,
+				CE2BB924251FB607001420DF /* Views */,
 				CE9E320E251BDC0000D23A9D /* Controllers */,
-				CE9E3201251BDB4700D23A9D /* Assets.xcassets */,
+				CE2B6CF5251CB4EB00F3432F /* Exceptions */,
+				CE2BB925251FB65E001420DF /* Assets */,
 				CE9E3206251BDB4700D23A9D /* Info.plist */,
+				CE2BB91E251FAA33001420DF /* GoogleService-Info.plist */,
 				CE9E31FE251BDB4600D23A9D /* Accord.xcdatamodeld */,
 			);
 			path = Accord;
@@ -74,7 +150,8 @@
 		CE9E320E251BDC0000D23A9D /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				CE9E31F9251BDB4600D23A9D /* ViewController.swift */,
+				CE2B6CEF251CB49500F3432F /* MusicListViewController.swift */,
+				CE2B6CF2251CB4C300F3432F /* PlayerViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -88,18 +165,12 @@
 			path = Storyboards;
 			sourceTree = "<group>";
 		};
-		CE9E3213251BDF0400D23A9D /* MainActivity */ = {
+		CFB14AFD2192E03503215368 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				0FE0E38006D3FEEEF3F7C49D /* Pods_Accord.framework */,
 			);
-			path = MainActivity;
-			sourceTree = "<group>";
-		};
-		CE9E3214251BDF7B00D23A9D /* DataModels */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = DataModels;
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -109,9 +180,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = CE9E3209251BDB4700D23A9D /* Build configuration list for PBXNativeTarget "Accord" */;
 			buildPhases = (
+				FAE6759CB39109E397FCEA25 /* [CP] Check Pods Manifest.lock */,
 				CE9E31EE251BDB4600D23A9D /* Sources */,
 				CE9E31EF251BDB4600D23A9D /* Frameworks */,
 				CE9E31F0251BDB4600D23A9D /* Resources */,
+				B9DCB84008DA793EA2BEBE71 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -160,6 +233,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CE9E3205251BDB4700D23A9D /* LaunchScreen.storyboard in Resources */,
+				CE2BB91F251FAA33001420DF /* GoogleService-Info.plist in Resources */,
 				CE9E3202251BDB4700D23A9D /* Assets.xcassets in Resources */,
 				CE9E31FD251BDB4600D23A9D /* Main.storyboard in Resources */,
 			);
@@ -167,15 +241,61 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		B9DCB84008DA793EA2BEBE71 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Accord/Pods-Accord-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Accord/Pods-Accord-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Accord/Pods-Accord-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		FAE6759CB39109E397FCEA25 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Accord-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		CE9E31EE251BDB4600D23A9D /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CE9E31FA251BDB4600D23A9D /* ViewController.swift in Sources */,
+				CE2B6CF0251CB49500F3432F /* MusicListViewController.swift in Sources */,
 				CE9E31F6251BDB4600D23A9D /* AppDelegate.swift in Sources */,
 				CE9E31F8251BDB4600D23A9D /* SceneDelegate.swift in Sources */,
 				CE9E3200251BDB4600D23A9D /* Accord.xcdatamodeld in Sources */,
+				CE4D90142520C2D50020FF3D /* URLSessionManager.swift in Sources */,
+				CE2B6CF3251CB4C300F3432F /* PlayerViewController.swift in Sources */,
+				CE2B6CF8251D02C300F3432F /* MusicTableViewCell.swift in Sources */,
+				CE2B6CFB251D39C000F3432F /* DatabaseManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -319,6 +439,7 @@
 		};
 		CE9E320A251BDB4700D23A9D /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2C4DFAB6F1D46AA724A17E64 /* Pods-Accord.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -338,6 +459,7 @@
 		};
 		CE9E320B251BDB4700D23A9D /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 32CDC082F315D75FDE575134 /* Pods-Accord.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
