@@ -30,12 +30,14 @@ class DatabaseManager {
                     
                 } else {
                     if let documents = documents {
-                        for document in documents.documents {
+                        for (index, document) in documents.documents.enumerated() {
                             DatabaseManager.shared.addFirebaseTracksToCoreData(
                                 trackName: document.data()["trackName"] as! String,
                                 author: document.data()["author"] as! String,
                                 length: document.data()["length"] as! String,
-                                url: document.data()["url"] as! String)
+                                url: document.data()["url"] as! String,
+                                index: Int64(index))
+                            print(index)
                             
                             print(document.data()["trackName"] as! String)
                             print(document.data()["url"] as! String)
@@ -75,7 +77,7 @@ class DatabaseManager {
         return true
     }
     
-    func addFirebaseTracksToCoreData(trackName: String, author: String, length: String, url: String) {
+    func addFirebaseTracksToCoreData(trackName: String, author: String, length: String, url: String, index: Int64) {
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         let context = appDelegate.persistentContainer.viewContext
         let entity = NSEntityDescription.entity(forEntityName: "Track", in: context)
@@ -86,6 +88,7 @@ class DatabaseManager {
             track.author = author
             track.length = length
             track.url = url
+            track.index = index
             
             do {
                 try context.save()
@@ -109,6 +112,20 @@ class DatabaseManager {
         
         return []
     }
+    
+//    func getCoreDataDownloads() -> [Download] {
+//        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+//        let context = appDelegate.persistentContainer.viewContext
+//        let fetchRequest: NSFetchRequest<Download> = Download.fetchRequest()
+//
+//        do {
+//            return try context.fetch(fetchRequest)
+//        } catch {
+//            print("Fetch error")
+//        }
+//
+//        return []
+//    }
     
     func coreDataCleanUp() {
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
