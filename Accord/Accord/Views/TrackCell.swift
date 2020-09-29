@@ -15,11 +15,9 @@ class TrackCell: UITableViewCell {
     @IBOutlet weak var cellView: UIView!
     @IBOutlet weak var trackNameLabel: UILabel!
     @IBOutlet weak var trackImage: UIImageView!
-    @IBOutlet weak var downloadButton: UIButton!
     @IBOutlet weak var trackLengthLabel: UILabel!
     @IBOutlet weak var downloadProgressButton: UIView!
     @IBOutlet weak var downloadButtonImage: UIImageView!
-    @IBOutlet weak var downloadProgressImage: UIImageView!
     @IBOutlet weak var downloadProgressLine: UIProgressView!
     
     // var url: String?
@@ -63,9 +61,6 @@ class TrackCell: UITableViewCell {
         trackImage.layer.cornerRadius = 40
         trackImage.layer.maskedCorners = [.layerMinXMinYCorner, .layerMinXMaxYCorner]
         
-        downloadButton.layer.cornerRadius = 28
-        downloadButton.imageEdgeInsets = UIEdgeInsets(top: 15, left: 15, bottom: 15, right: 15)
-        
         downloadProgressButton.layer.cornerRadius = 30
         
         cellView.layer.addSublayer(circleLoadingStatus)
@@ -77,8 +72,16 @@ class TrackCell: UITableViewCell {
         downloadProgressLine.progress = progress
     }
     
-    func configereCell(track: Track) {
+    func hideDownloadButton() {
+        downloadButtonImage.isHidden = true
+        downloadProgressButton.isHidden = true
+    }
+    
+    func configereCell(track: Track, delegate: TrackCellDelegate, indexPath: IndexPath) {
         self.track = track
+        self.delegate = delegate
+        
+        let indexPathStr = String(indexPath.row)
         
         trackNameLabel.text =
             (track.trackName ?? "Unknown")
@@ -86,7 +89,29 @@ class TrackCell: UITableViewCell {
             + (track.author ?? "Unknown")
         trackLengthLabel.text = track.length ?? "Unknown"
         trackImage.image = UIImage(systemName: "music.note")
-        // updateCell(progress: )
+        
+        if let url = track.url {
+            if let url = URL(string: url) {
+                updateCell(progress: URLSessionManager.shared.activeDownloads[url]?.progress ?? 0)
+                
+                if let isDownloading = URLSessionManager.shared.activeDownloads[url]?.isDownloading {
+                    if isDownloading {
+                        downloadButtonImage.image = UIImage(systemName: "pause")
+                    } else {
+                        downloadButtonImage.image = UIImage(systemName: "arrow.down")
+                    }
+                }
+            }
+        }
+        
+//        switch downloadStatus {
+//        case .unactiveDownload:
+//            downloadButtonImage.image = UIImage(systemName: "pause")
+//        case .activeDownload:
+//            downloadButtonImage.image = UIImage(systemName: "arrow.down")
+//        case .pausedDownload:
+//            downloadButtonImage.image = UIImage(systemName: "pause")
+//        }
     }
     
     
@@ -96,7 +121,7 @@ class TrackCell: UITableViewCell {
         switch downloadStatus {
         case .unactiveDownload:
             downloadStatus = .activeDownload
-            downloadButtonImage.image = UIImage(systemName: "pause")
+            //downloadButtonImage.image = UIImage(systemName: "pause")
             
             if let track = track {
                 let index = Int(track.index)
@@ -105,24 +130,30 @@ class TrackCell: UITableViewCell {
                     URLSessionManager.shared.startDownload(url: url, trackIndex: index)
                 }
             }
+            
+            delegate?.startDownload(cell: self)
         case .activeDownload:
             downloadStatus = .pausedDownload
-            downloadButtonImage.image = UIImage(systemName: "arrow.down")
+            //downloadButtonImage.image = UIImage(systemName: "arrow.down")
             
             if let track = track {
                 if let url = track.url {
                     URLSessionManager.shared.pauseDownload(url: url)
                 }
             }
+            
+            delegate?.pauseDownload(cell: self)
         case .pausedDownload:
             downloadStatus = .activeDownload
-            downloadButtonImage.image = UIImage(systemName: "pause")
+           // downloadButtonImage.image = UIImage(systemName: "pause")
             
             if let track = track {
                 if let url = track.url {
                     URLSessionManager.shared.resumeDownload(url: url)
                 }
             }
+            
+            delegate?.resumeDownload(cell: self)
         }
     }
 }
