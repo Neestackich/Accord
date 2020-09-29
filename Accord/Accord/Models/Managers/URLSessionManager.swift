@@ -13,6 +13,7 @@ class URLSessionManager {
     // MARK: -Properties
     
     static let shared = URLSessionManager()
+    
     var activeDownloads: [URL: Download] = [:]
     var downloadSession: URLSession?
     
@@ -21,6 +22,9 @@ class URLSessionManager {
     
     func startDownload(url: String, trackIndex: Int) {
         let download = Download(url: url, trackIndex: trackIndex)
+        
+        download.url = url
+        download.trackIndex = trackIndex
         
         if let url = URL(string: url) {
             download.task = downloadSession?.downloadTask(with: url)
