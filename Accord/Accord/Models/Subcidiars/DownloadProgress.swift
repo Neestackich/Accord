@@ -6,3 +6,9 @@
 //
 
 import Foundation
+
+enum DownloadProgress {
+    case activeDownload
+    case unactiveDownload
+    case pausedDownload
+}
