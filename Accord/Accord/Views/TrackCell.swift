@@ -7,7 +7,7 @@
 
 import UIKit
 
-class MusicTableViewCell: UITableViewCell {
+class TrackCell: UITableViewCell {
 
     
     // MARK: -Properties
@@ -17,11 +17,13 @@ class MusicTableViewCell: UITableViewCell {
     @IBOutlet weak var trackImage: UIImageView!
     @IBOutlet weak var downloadButton: UIButton!
     @IBOutlet weak var trackLengthLabel: UILabel!
-    
     @IBOutlet weak var downloadProgressImage: UIImageView!
     @IBOutlet weak var downloadProgressButton: UIView!
+    @IBOutlet weak var downloadProgressLine: UIProgressView!
     
     var circleLoadingStatus: CAShapeLayer!
+    var url: String?
+    var trackIndex: Int?
     
     // MARK: -Methods
     
@@ -62,7 +64,13 @@ class MusicTableViewCell: UITableViewCell {
         // downloadProgressButton.layer.addSublayer(circleLoadingStatus)
     }
     
+    func updateCell(progress: Float) {
+        downloadProgressLine.progress = progress
+    }
+    
     @objc func downloadTap() {
-        print("tap")
+        if let url = url, let trackIndex = trackIndex {
+            URLSessionManager.shared.startDownload(url: url, trackIndex: trackIndex)
+        }
     }
 }
