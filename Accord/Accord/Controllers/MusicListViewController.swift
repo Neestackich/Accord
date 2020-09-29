@@ -7,9 +7,10 @@
 
 import UIKit
 
-class MusicListViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, URLSessionDownloadDelegate {
+
+class MusicListViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, URLSessionDownloadDelegate, TrackCellDelegate {
     
-    
+
     // MARK: -Properties
     
     @IBOutlet weak var tableView: UITableView!
@@ -51,25 +52,33 @@ class MusicListViewController: UIViewController, UITableViewDataSource, UITableV
         return documentsPath.appendingPathComponent(url.lastPathComponent)
     }
     
+    func updateCell(row: Int) {
+        tableView.reloadRows(at: [IndexPath(row: row, section: 0)], with: .none)
+    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return DatabaseManager.shared.tracks.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let tableViewCell = tableView.dequeueReusableCell(withIdentifier: "MusicTableViewCell", for: indexPath) as! TrackCell
-        tableViewCell.configereCell(track: DatabaseManager.shared.tracks[indexPath.row])
+        let tableViewCell = tableView.dequeueReusableCell(withIdentifier: "TrackCell", for: indexPath) as! TrackCell
+        tableViewCell.configereCell(track: DatabaseManager.shared.tracks[indexPath.row], delegate: self, indexPath: indexPath)
+        
 
+        print(indexPath.row)
         return tableViewCell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let playerViewController = storyboard?.instantiateViewController(withIdentifier: viewControllerId) as! PlayerViewController
         playerViewController.modalPresentationStyle = .fullScreen
-        playerViewController.trackName = DatabaseManager.shared.tracks[indexPath.row].trackName ?? "Unknown"
-        playerViewController.author = DatabaseManager.shared.tracks[indexPath.row].author ?? "Unknown"
+        playerViewController.track = DatabaseManager.shared.tracks[indexPath.row]
         
         present(playerViewController, animated: true)
+        
+        tableView.deselectRow(at: indexPath, animated: true)
     }
+    
     
     
     // MARK: -Networkng
@@ -79,7 +88,7 @@ class MusicListViewController: UIViewController, UITableViewDataSource, UITableV
                     didFinishDownloadingTo location: URL) {
         if let sourceURL = downloadTask.originalRequest?.url {
             let download = URLSessionManager.shared.activeDownloads[sourceURL]
-            URLSessionManager.shared.activeDownloads[sourceURL] = nil
+            // URLSessionManager.shared.activeDownloads[sourceURL] = nil
             
             let destinationURL = localFilePath(for: sourceURL)
             print(destinationURL)
@@ -92,6 +101,12 @@ class MusicListViewController: UIViewController, UITableViewDataSource, UITableV
               download?.downloaded = true
             } catch let error {
               print("Could not copy file to disk: \(error.localizedDescription)")
+            }
+            
+            DispatchQueue.main.async {
+                if let trackIndex = download?.trackIndex, let trackCell = self.tableView.cellForRow(at: IndexPath(row: trackIndex, section: 0)) as? TrackCell {
+                    trackCell.hideDownloadButton()
+                }
             }
         }
     }
@@ -111,5 +126,20 @@ class MusicListViewController: UIViewController, UITableViewDataSource, UITableV
                 }
             }
         }
+    }
+   
+    
+    // MARK: -TravelCellDelegate realization
+    
+    func startDownload(cell: TrackCell) {
+        updateCell(row: Int(cell.track?.index ?? 0))
+    }
+    
+    func pauseDownload(cell: TrackCell) {
+        updateCell(row: Int(cell.track?.index ?? 0))
+    }
+    
+    func resumeDownload(cell: TrackCell) {
+        updateCell(row: Int(cell.track?.index ?? 0))
     }
 }
