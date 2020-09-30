@@ -1,12 +1,23 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="17192" systemVersion="19G2021" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="17192" systemVersion="19H2" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="CompletedDownload" representedClassName="CompletedDownload" syncable="YES" codeGenerationType="class">
+        <attribute name="downloadedTrackPath" optional="YES" attributeType="URI"/>
+        <attribute name="isDownloaded" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="isDownloading" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="progress" optional="YES" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="resumeData" optional="YES" attributeType="Binary"/>
+        <attribute name="trackIndex" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="url" optional="YES" attributeType="String"/>
+    </entity>
     <entity name="Track" representedClassName="Track" syncable="YES" codeGenerationType="class">
         <attribute name="author" optional="YES" attributeType="String"/>
+        <attribute name="index" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="length" optional="YES" attributeType="String"/>
         <attribute name="trackName" optional="YES" attributeType="String"/>
         <attribute name="url" optional="YES" attributeType="String"/>
     </entity>
     <elements>
-        <element name="Track" positionX="-63" positionY="-18" width="128" height="103"/>
+        <element name="CompletedDownload" positionX="-54" positionY="27" width="128" height="148"/>
+        <element name="Track" positionX="-63" positionY="-18" width="128" height="118"/>
     </elements>
 </model>
