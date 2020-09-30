@@ -8,7 +8,7 @@
 import UIKit
 
 
-class MusicListViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, URLSessionDownloadDelegate, TrackCellDelegate {
+class TracksListViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, URLSessionDownloadDelegate, TrackCellDelegate, TrackListViewControllerDelegate {
     
 
     // MARK: -Properties
@@ -64,8 +64,6 @@ class MusicListViewController: UIViewController, UITableViewDataSource, UITableV
         let tableViewCell = tableView.dequeueReusableCell(withIdentifier: "TrackCell", for: indexPath) as! TrackCell
         tableViewCell.configereCell(track: DatabaseManager.shared.tracks[indexPath.row], delegate: self, indexPath: indexPath)
         
-
-        print(indexPath.row)
         return tableViewCell
     }
     
@@ -73,12 +71,12 @@ class MusicListViewController: UIViewController, UITableViewDataSource, UITableV
         let playerViewController = storyboard?.instantiateViewController(withIdentifier: viewControllerId) as! PlayerViewController
         playerViewController.modalPresentationStyle = .fullScreen
         playerViewController.track = DatabaseManager.shared.tracks[indexPath.row]
+        playerViewController.delegate = self
         
         present(playerViewController, animated: true)
         
         tableView.deselectRow(at: indexPath, animated: true)
     }
-    
     
     
     // MARK: -Networkng
@@ -87,8 +85,15 @@ class MusicListViewController: UIViewController, UITableViewDataSource, UITableV
                     downloadTask: URLSessionDownloadTask,
                     didFinishDownloadingTo location: URL) {
         if let sourceURL = downloadTask.originalRequest?.url {
-            let download = URLSessionManager.shared.activeDownloads[sourceURL]
+            guard let download = URLSessionManager.shared.activeDownloads[sourceURL] else {
+                return
+            }
+            
             // URLSessionManager.shared.activeDownloads[sourceURL] = nil
+
+            guard let url = URL(string: download.url) else {
+                return
+            }
             
             let destinationURL = localFilePath(for: sourceURL)
             print(destinationURL)
@@ -97,15 +102,26 @@ class MusicListViewController: UIViewController, UITableViewDataSource, UITableV
             try? fileManager.removeItem(at: destinationURL)
             
             do {
-              try fileManager.copyItem(at: location, to: destinationURL)
-              download?.downloaded = true
+                try fileManager.copyItem(at: location, to: destinationURL)
+                download.isDownloaded = true
+                download.downloadStatus = .finishedDownload
+                
+                DatabaseManager.shared.addDownloadedTrackToCoreData(
+                    trackIndex: download.trackIndex,
+                    downloadedTrackPath: url,
+                    resumeData: download.resumeData,
+                    isDownloading: false,
+                    isDownloaded: true,
+                    progress: download.progress,
+                    url: url)
             } catch let error {
               print("Could not copy file to disk: \(error.localizedDescription)")
             }
             
             DispatchQueue.main.async {
-                if let trackIndex = download?.trackIndex, let trackCell = self.tableView.cellForRow(at: IndexPath(row: trackIndex, section: 0)) as? TrackCell {
+                if let trackCell = self.tableView.cellForRow(at: IndexPath(row: download.trackIndex, section: 0)) as? TrackCell {
                     trackCell.hideDownloadButton()
+                    self.tableView.reloadRows(at: [IndexPath(row: download.trackIndex, section: 0)], with: .none)
                 }
             }
         }
@@ -129,7 +145,7 @@ class MusicListViewController: UIViewController, UITableViewDataSource, UITableV
     }
    
     
-    // MARK: -TravelCellDelegate realization
+    // MARK: -TrackCellDelegate
     
     func startDownload(cell: TrackCell) {
         updateCell(row: Int(cell.track?.index ?? 0))

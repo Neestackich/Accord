@@ -20,10 +20,8 @@ class TrackCell: UITableViewCell {
     @IBOutlet weak var downloadButtonImage: UIImageView!
     @IBOutlet weak var downloadProgressLine: UIProgressView!
     
-    // var url: String?
     var track: Track?
-    // var trackIndex: Int?
-    var circleLoadingStatus: CAShapeLayer!
+//    var circleLoadingStatus: CAShapeLayer!
     var downloadStatus: DownloadProgress = .unactiveDownload
     
     var delegate: TrackCellDelegate?
@@ -49,11 +47,11 @@ class TrackCell: UITableViewCell {
             endAngle: CGFloat.pi * 2,
             clockwise: true)
         
-        circleLoadingStatus = CAShapeLayer()
-        circleLoadingStatus.path = circularPath.cgPath
-        circleLoadingStatus.strokeColor = UIColor.white.cgColor
-        circleLoadingStatus.fillColor = UIColor.clear.cgColor
-        circleLoadingStatus.lineWidth = 5
+//        circleLoadingStatus = CAShapeLayer()
+//        circleLoadingStatus.path = circularPath.cgPath
+//        circleLoadingStatus.strokeColor = UIColor.white.cgColor
+//        circleLoadingStatus.fillColor = UIColor.clear.cgColor
+//        circleLoadingStatus.lineWidth = 5
         
         cellView.layer.cornerRadius = 40
         cellView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMinXMaxYCorner]
@@ -63,7 +61,7 @@ class TrackCell: UITableViewCell {
         
         downloadProgressButton.layer.cornerRadius = 30
         
-        cellView.layer.addSublayer(circleLoadingStatus)
+//      cellView.layer.addSublayer(circleLoadingStatus)
         
         downloadProgressButton.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(downloadTap)))
     }
@@ -77,11 +75,17 @@ class TrackCell: UITableViewCell {
         downloadProgressButton.isHidden = true
     }
     
+    func showDownloadButton() {
+        downloadButtonImage.isHidden = false
+        downloadProgressButton.isHidden = false
+    }
+    
     func configereCell(track: Track, delegate: TrackCellDelegate, indexPath: IndexPath) {
+        var downloadProgress: Float = 0
+        
+        self.downloadStatus = .unactiveDownload
         self.track = track
         self.delegate = delegate
-        
-        let indexPathStr = String(indexPath.row)
         
         trackNameLabel.text =
             (track.trackName ?? "Unknown")
@@ -90,28 +94,32 @@ class TrackCell: UITableViewCell {
         trackLengthLabel.text = track.length ?? "Unknown"
         trackImage.image = UIImage(systemName: "music.note")
         
-        if let url = track.url {
-            if let url = URL(string: url) {
-                updateCell(progress: URLSessionManager.shared.activeDownloads[url]?.progress ?? 0)
-                
-                if let isDownloading = URLSessionManager.shared.activeDownloads[url]?.isDownloading {
-                    if isDownloading {
-                        downloadButtonImage.image = UIImage(systemName: "pause")
-                    } else {
-                        downloadButtonImage.image = UIImage(systemName: "arrow.down")
-                    }
-                }
-            }
+        guard let unwrappedUrl = track.url, let url = URL(string: unwrappedUrl) else {
+            return
         }
         
-//        switch downloadStatus {
-//        case .unactiveDownload:
-//            downloadButtonImage.image = UIImage(systemName: "pause")
-//        case .activeDownload:
-//            downloadButtonImage.image = UIImage(systemName: "arrow.down")
-//        case .pausedDownload:
-//            downloadButtonImage.image = UIImage(systemName: "pause")
-//        }
+        if let download = URLSessionManager.shared.activeDownloads[url] {
+            downloadProgress = download.progress
+            downloadStatus = download.downloadStatus
+            
+            print(download.progress)
+        }
+        
+        updateCell(progress: downloadProgress)
+        
+        switch downloadStatus {
+        case .activeDownload:
+            showDownloadButton()
+            downloadButtonImage.image = UIImage(systemName: "pause")
+        case .unactiveDownload:
+            showDownloadButton()
+            downloadButtonImage.image = UIImage(systemName: "arrow.down")
+        case .pausedDownload:
+            showDownloadButton()
+            downloadButtonImage.image = UIImage(systemName: "arrow.down")
+        case .finishedDownload:
+            hideDownloadButton()
+        }
     }
     
     
@@ -121,7 +129,6 @@ class TrackCell: UITableViewCell {
         switch downloadStatus {
         case .unactiveDownload:
             downloadStatus = .activeDownload
-            //downloadButtonImage.image = UIImage(systemName: "pause")
             
             if let track = track {
                 let index = Int(track.index)
@@ -134,7 +141,6 @@ class TrackCell: UITableViewCell {
             delegate?.startDownload(cell: self)
         case .activeDownload:
             downloadStatus = .pausedDownload
-            //downloadButtonImage.image = UIImage(systemName: "arrow.down")
             
             if let track = track {
                 if let url = track.url {
@@ -145,7 +151,6 @@ class TrackCell: UITableViewCell {
             delegate?.pauseDownload(cell: self)
         case .pausedDownload:
             downloadStatus = .activeDownload
-           // downloadButtonImage.image = UIImage(systemName: "pause")
             
             if let track = track {
                 if let url = track.url {
@@ -154,6 +159,8 @@ class TrackCell: UITableViewCell {
             }
             
             delegate?.resumeDownload(cell: self)
+        case .finishedDownload:
+            break
         }
     }
 }

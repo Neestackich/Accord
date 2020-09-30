@@ -11,4 +11,5 @@ enum DownloadProgress {
     case activeDownload
     case unactiveDownload
     case pausedDownload
+    case finishedDownload
 }

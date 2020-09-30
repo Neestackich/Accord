@@ -15,7 +15,8 @@ class Download {
     var task: URLSessionDownloadTask?
     var trackIndex: Int
     var url: String
-    var downloaded = false
+    var isDownloaded = false
+    var downloadStatus: DownloadProgress = .finishedDownload
   
     init(url: String, trackIndex: Int) {
         self.url = url

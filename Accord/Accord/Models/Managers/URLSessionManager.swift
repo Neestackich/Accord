@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import CoreData
 
 class URLSessionManager {
     
@@ -22,15 +23,16 @@ class URLSessionManager {
     
     func startDownload(url: String, trackIndex: Int) {
         let download = Download(url: url, trackIndex: trackIndex)
-        
+
         download.url = url
         download.trackIndex = trackIndex
         
-        if let url = URL(string: url) {
-            download.task = downloadSession?.downloadTask(with: url)
+        if let urlU = URL(string: url) {
+            download.task = downloadSession?.downloadTask(with: urlU)
             download.task?.resume()
             download.isDownloading = true
-            activeDownloads[url] = download
+            download.downloadStatus = .activeDownload
+            activeDownloads[urlU] = download
         }
     }
     
@@ -38,6 +40,7 @@ class URLSessionManager {
         if let url = URL(string: url) {
             if let download = activeDownloads[url], download.isDownloading {
                 download.task?.cancel()
+                download.downloadStatus = .finishedDownload
                 activeDownloads[url] = nil
             }
         }
@@ -49,7 +52,7 @@ class URLSessionManager {
                 download.task?.cancel { data in
                     download.resumeData = data
                 }
-                
+                download.downloadStatus = .pausedDownload
                 download.isDownloading = false
             }
         }
@@ -67,6 +70,7 @@ class URLSessionManager {
                     print("Cant be resumed ")
                 }
                 
+                download.downloadStatus = .activeDownload
                 download.task?.resume()
                 download.isDownloading = true
             }
