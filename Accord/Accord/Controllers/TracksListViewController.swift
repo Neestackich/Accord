@@ -53,8 +53,7 @@ class TracksListViewController: UIViewController, UITableViewDataSource, UITable
     }
     
     func updateCell(row: Int) {
-        tableView.reloadData()
-        // tableView.reloadRows(at: [IndexPath(row: row, section: 0)], with: .none)
+        tableView.reloadRows(at: [IndexPath(row: row, section: 0)], with: .none)
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -65,8 +64,6 @@ class TracksListViewController: UIViewController, UITableViewDataSource, UITable
         let tableViewCell = tableView.dequeueReusableCell(withIdentifier: "TrackCell", for: indexPath) as! TrackCell
         tableViewCell.configereCell(track: DatabaseManager.shared.tracks[indexPath.row], delegate: self, indexPath: indexPath)
         
-
-        print(indexPath.row)
         return tableViewCell
     }
     
@@ -94,7 +91,7 @@ class TracksListViewController: UIViewController, UITableViewDataSource, UITable
             
             // URLSessionManager.shared.activeDownloads[sourceURL] = nil
 
-            guard let url = URL(string: download.url), let task = download.task else {
+            guard let url = URL(string: download.url) else {
                 return
             }
             
@@ -105,8 +102,9 @@ class TracksListViewController: UIViewController, UITableViewDataSource, UITable
             try? fileManager.removeItem(at: destinationURL)
             
             do {
-              try fileManager.copyItem(at: location, to: destinationURL)
-              download.downloaded = true
+                try fileManager.copyItem(at: location, to: destinationURL)
+                download.isDownloaded = true
+                download.downloadStatus = .finishedDownload
                 
                 DatabaseManager.shared.addDownloadedTrackToCoreData(
                     trackIndex: download.trackIndex,
@@ -123,6 +121,7 @@ class TracksListViewController: UIViewController, UITableViewDataSource, UITable
             DispatchQueue.main.async {
                 if let trackCell = self.tableView.cellForRow(at: IndexPath(row: download.trackIndex, section: 0)) as? TrackCell {
                     trackCell.hideDownloadButton()
+                    self.tableView.reloadRows(at: [IndexPath(row: download.trackIndex, section: 0)], with: .none)
                 }
             }
         }
