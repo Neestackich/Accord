@@ -28,11 +28,18 @@ class PlayerViewController: UIViewController {
     @IBOutlet weak var trackSlider: UISlider!
     @IBOutlet weak var currentTrackTime: UILabel!
     @IBOutlet weak var mainTrackTime: UILabel!
+    @IBOutlet weak var playerTrackControllers: UIStackView!
+    @IBOutlet weak var warningLabel: UILabel!
+    @IBOutlet weak var playerTrackButtons: UIStackView!
+    @IBOutlet weak var deleteButton: UIButton!
     
     var track: Track?
-    let documentsPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
     var player: AVAudioPlayer?
     var isTrackPlaying = false
+    let documentsPath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+    
+    var delegate: TrackListViewControllerDelegate?
+    
     
     // MARK: -Methods
     
@@ -42,30 +49,56 @@ class PlayerViewController: UIViewController {
         setup()
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        
+    func setup() {
         if let track = track {
             if let author = track.author, let trackName = track.trackName {
                 authorLabel.text = author
                 trackNameLabel.text = trackName
+                
+                //put trackImage here
             }
+            
+            if let url = track.url, let sourceUrl = URL(string: url) {
+                if let download = URLSessionManager.shared.activeDownloads[sourceUrl] {
+                    if download.downloadStatus != .pausedDownload {
+                        warningLabel.isHidden = true
+                    } else {
+                        showControllers()  
+                    }
+                } else {
+                    showControllers()
+                }
+            }
+        }
+                
+        configureAudioPlayer()
+        viewsCornersSetup(views: mainView, controllerView, blankView)
+        buttonsSetup(buttons: playButton, backButton, backwardRewind, forwardRewind, deleteButton)
+        
+        var timer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(updateSelector), userInfo: nil, repeats: true)
+    }
+    
+    func showControllers() {
+        warningLabel.isHidden = false
+        playerTrackButtons.isHidden = true
+        playerTrackControllers.isHidden = true
+        deleteButton.isHidden = true
+    }
+    
+    func viewsCornersSetup(views: UIView...) {
+        for singleView in views {
+            singleView.layer.cornerRadius = 50
+            singleView.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
         }
     }
     
-    func setup() {
-        mainView.layer.cornerRadius = 50
-        mainView.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
-        controllerView.layer.cornerRadius = 50
-        controllerView.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
-        blankView.layer.cornerRadius = 50
-        blankView.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
-        
-        playButton.imageEdgeInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
-        backwardRewind.imageEdgeInsets = UIEdgeInsets(top: 5, left: 10, bottom: 5, right: 10)
-        forwardRewind.imageEdgeInsets = UIEdgeInsets(top: 5, left: 10, bottom: 5, right: 10)
-        backButton.imageEdgeInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
-        
+    func buttonsSetup(buttons: UIButton...) {
+        for button in buttons {
+            button.imageEdgeInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+        }
+    }
+    
+    func configureAudioPlayer() {
         do {
             try AVAudioSession.sharedInstance().setMode(.default)
             try AVAudioSession.sharedInstance().setActive(true, options: .notifyOthersOnDeactivation)
@@ -85,8 +118,6 @@ class PlayerViewController: UIViewController {
         } catch {
             
         }
-        
-        var timer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(updateSelector), userInfo: nil, repeats: true)
     }
     
     func setGradientLayer() {
@@ -98,6 +129,37 @@ class PlayerViewController: UIViewController {
     
     func localFilePath(for url: URL) -> URL {
         return documentsPath.appendingPathComponent(url.lastPathComponent)
+    }
+    
+    @IBAction func deleteButtonClick(_ sender: Any) {
+        guard let track = track, let url = track.url, let sourceURL = URL(string: url) else {
+            return
+        }
+        
+        guard let player = player else {
+            return
+        }
+        
+        let fileManager = FileManager.default
+        let destinationUrl = localFilePath(for: sourceURL)
+        
+        do {
+            try fileManager.removeItem(at: destinationUrl)
+            deleteButton.isHidden = true
+            print("Removed by path: \(destinationUrl)")
+        } catch {
+            print("No items found \(destinationUrl)")
+        }
+        
+        player.stop()
+        configureAudioPlayer()
+        warningLabel.isHidden = false
+        playerTrackButtons.isHidden = true
+        playerTrackControllers.isHidden = true
+        
+        URLSessionManager.shared.activeDownloads[sourceURL] = nil
+        
+        delegate?.updateCell(row: Int(track.index))
     }
     
     @IBAction func backButtonClick(_ sender: Any) {
@@ -145,6 +207,11 @@ class PlayerViewController: UIViewController {
         
         trackSlider.value = Float(player.currentTime)
         currentTrackTime.text = String(Int(player.currentTime))
+        
+        if player.currentTime == player.duration {
+            isTrackPlaying = false
+            updateButton()
+        }
     }
     
     func updateButton() {
