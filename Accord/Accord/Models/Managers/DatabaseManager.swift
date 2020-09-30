@@ -31,7 +31,7 @@ class DatabaseManager {
                 } else {
                     if let documents = documents {
                         for (index, document) in documents.documents.enumerated() {
-                            DatabaseManager.shared.addFirebaseTracksToCoreData(
+                            DatabaseManager.shared.addFirebaseTrackToCoreData(
                                 trackName: document.data()["trackName"] as! String,
                                 author: document.data()["author"] as! String,
                                 length: document.data()["length"] as! String,
@@ -77,7 +77,7 @@ class DatabaseManager {
         return true
     }
     
-    func addFirebaseTracksToCoreData(trackName: String, author: String, length: String, url: String, index: Int64) {
+    func addFirebaseTrackToCoreData(trackName: String, author: String, length: String, url: String, index: Int64) {
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         let context = appDelegate.persistentContainer.viewContext
         let entity = NSEntityDescription.entity(forEntityName: "Track", in: context)
@@ -99,10 +99,69 @@ class DatabaseManager {
         }
     }
     
+    func addDownloadedTrackToCoreData(trackIndex: Int, downloadedTrackPath: URL, resumeData: Data?, isDownloading: Bool, isDownloaded: Bool, progress: Float, url: URL) {
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        let context = appDelegate.persistentContainer.viewContext
+        let entity = NSEntityDescription.entity(forEntityName: "Downloads", in: context)
+        
+        if let entity = entity {
+            let downloadedTrack = NSManagedObject(entity: entity, insertInto: context) as! CompletedDownload
+            downloadedTrack.trackIndex = Int64(trackIndex)
+            downloadedTrack.downloadedTrackPath = downloadedTrackPath
+            downloadedTrack.resumeData = resumeData
+            downloadedTrack.isDownloading = isDownloading
+            downloadedTrack.isDownloaded = isDownloaded
+            downloadedTrack.progress = progress
+            
+            do {
+                try context.save()
+                print("/nNew object \(url) saved/n")
+            } catch {
+                print("/nSave error/n")
+            }
+        }
+    }
+    
+//    func deleteDownloadedTrackFromCoreData(trackIndex: Int) {
+//        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+//        let context = appDelegate.persistentContainer.viewContext
+//        let fetchRequest: NSFetchRequest<DownloadedTrack> = DownloadedTrack.fetchRequest()
+//        fetchRequest.predicate = NSPredicate(format: "trackIndex = %@", Int64(trackIndex))
+//
+//        do {
+//            let test = try context.fetch(fetchRequest)
+//
+//            let objectToDelete = test[0] as NSManagedObject
+//            context.delete(objectToDelete)
+//
+//            do {
+//                try context.save()
+//            } catch {
+//                print("Save error")
+//            }
+//        } catch {
+//            print("Object is not found")
+//        }
+//    }
+    
     func getCoreDataTracks() -> [Track] {
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         let context = appDelegate.persistentContainer.viewContext
         let fetchRequest: NSFetchRequest<Track> = Track.fetchRequest()
+        
+        do {
+            return try context.fetch(fetchRequest)
+        } catch {
+            print("Fetch error")
+        }
+        
+        return []
+    }
+    
+    func getCoreDataDownloads() -> [CompletedDownload] {
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        let context = appDelegate.persistentContainer.viewContext
+        let fetchRequest: NSFetchRequest<CompletedDownload> = CompletedDownload.fetchRequest()
         
         do {
             return try context.fetch(fetchRequest)
