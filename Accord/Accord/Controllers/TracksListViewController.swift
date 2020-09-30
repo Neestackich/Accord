@@ -8,7 +8,7 @@
 import UIKit
 
 
-class MusicListViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, URLSessionDownloadDelegate, TrackCellDelegate {
+class TracksListViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, URLSessionDownloadDelegate, TrackCellDelegate, TrackListViewControllerDelegate {
     
 
     // MARK: -Properties
@@ -53,7 +53,8 @@ class MusicListViewController: UIViewController, UITableViewDataSource, UITableV
     }
     
     func updateCell(row: Int) {
-        tableView.reloadRows(at: [IndexPath(row: row, section: 0)], with: .none)
+        tableView.reloadData()
+        // tableView.reloadRows(at: [IndexPath(row: row, section: 0)], with: .none)
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -73,12 +74,12 @@ class MusicListViewController: UIViewController, UITableViewDataSource, UITableV
         let playerViewController = storyboard?.instantiateViewController(withIdentifier: viewControllerId) as! PlayerViewController
         playerViewController.modalPresentationStyle = .fullScreen
         playerViewController.track = DatabaseManager.shared.tracks[indexPath.row]
+        playerViewController.delegate = self
         
         present(playerViewController, animated: true)
         
         tableView.deselectRow(at: indexPath, animated: true)
     }
-    
     
     
     // MARK: -Networkng
@@ -87,8 +88,15 @@ class MusicListViewController: UIViewController, UITableViewDataSource, UITableV
                     downloadTask: URLSessionDownloadTask,
                     didFinishDownloadingTo location: URL) {
         if let sourceURL = downloadTask.originalRequest?.url {
-            let download = URLSessionManager.shared.activeDownloads[sourceURL]
+            guard let download = URLSessionManager.shared.activeDownloads[sourceURL] else {
+                return
+            }
+            
             // URLSessionManager.shared.activeDownloads[sourceURL] = nil
+
+            guard let url = URL(string: download.url), let task = download.task else {
+                return
+            }
             
             let destinationURL = localFilePath(for: sourceURL)
             print(destinationURL)
@@ -98,13 +106,22 @@ class MusicListViewController: UIViewController, UITableViewDataSource, UITableV
             
             do {
               try fileManager.copyItem(at: location, to: destinationURL)
-              download?.downloaded = true
+              download.downloaded = true
+                
+                DatabaseManager.shared.addDownloadedTrackToCoreData(
+                    trackIndex: download.trackIndex,
+                    downloadedTrackPath: url,
+                    resumeData: download.resumeData,
+                    isDownloading: false,
+                    isDownloaded: true,
+                    progress: download.progress,
+                    url: url)
             } catch let error {
               print("Could not copy file to disk: \(error.localizedDescription)")
             }
             
             DispatchQueue.main.async {
-                if let trackIndex = download?.trackIndex, let trackCell = self.tableView.cellForRow(at: IndexPath(row: trackIndex, section: 0)) as? TrackCell {
+                if let trackCell = self.tableView.cellForRow(at: IndexPath(row: download.trackIndex, section: 0)) as? TrackCell {
                     trackCell.hideDownloadButton()
                 }
             }
@@ -129,7 +146,7 @@ class MusicListViewController: UIViewController, UITableViewDataSource, UITableV
     }
    
     
-    // MARK: -TravelCellDelegate realization
+    // MARK: -TrackCellDelegate
     
     func startDownload(cell: TrackCell) {
         updateCell(row: Int(cell.track?.index ?? 0))
